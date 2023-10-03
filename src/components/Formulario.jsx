@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import Error from "./Error";
 
 const Formulario = ({ pacientes, setPacientes }) => {
   const [nombre, setNombre] = useState("");
@@ -8,6 +9,13 @@ const Formulario = ({ pacientes, setPacientes }) => {
   const [sintomas, setSintomas] = useState("");
 
   const [error, setError] = useState(false);
+
+  const generarId = () => {
+    const fecha = Date.now().toString(36)
+    const random = Math.random().toString(36).substring(2)
+
+    return fecha + random;
+  }
 
 
   const handleSubmit = (e) => {
@@ -29,7 +37,8 @@ const Formulario = ({ pacientes, setPacientes }) => {
       propietario,
       email,
       fecha,
-      sintomas
+      sintomas,
+      id: generarId()
     }
 
     // console.log(objetoPaciente);
@@ -46,7 +55,8 @@ const Formulario = ({ pacientes, setPacientes }) => {
       <p className="textl-lg mt-5 text-center mb-10">Añade Pacientes y <span className="text-rose-600 font-bold">Administralos</span></p>
 
       <form onSubmit={handleSubmit} className="bg-white shadow-md rounded-lg py-10 px-5 mb-10">
-        {error && (<div className="bg-red-800 text-white p-3 uppercase font-bold mb-3 rounded-md"><p>Todos los campos son obligatorios</p></div>)}
+        {/* {error && <Error mensaje='Todos los campos son obligatorios' />} */}
+        {error && <Error><p>Todos los campos son obligatorios</p></Error>}
         <div className="mb-5">
           <label htmlFor="mascota" className="block text-gray-700 uppercase font-bold">Nombre Mascota</label>
           <input id="mascota" type="text" placeholder="Nombre de la mascota" className="border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md" value={nombre} onChange={(e) => setNombre(e.target.value)} />
