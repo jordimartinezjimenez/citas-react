@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Error from "./Error";
 
-const Formulario = ({ pacientes, setPacientes }) => {
+const Formulario = ({ pacientes, setPacientes, paciente, setPaciente }) => {
   const [nombre, setNombre] = useState("");
   const [propietario, setPropietario] = useState("");
   const [email, setEmail] = useState("");
@@ -9,6 +9,12 @@ const Formulario = ({ pacientes, setPacientes }) => {
   const [sintomas, setSintomas] = useState("");
 
   const [error, setError] = useState(false);
+
+  useEffect(() => {
+    if (Object.keys(paciente).length > 0) {
+      setNombre(paciente.nombre), setPropietario(paciente.propietario), setEmail(paciente.email), setFecha(paciente.fecha), setSintomas(paciente.sintomas)
+    }
+  }, [paciente])
 
   const generarId = () => {
     const fecha = Date.now().toString(36)
@@ -32,17 +38,35 @@ const Formulario = ({ pacientes, setPacientes }) => {
     setError(false);
 
     // Objeto de Paciente
+    // const objetoPaciente = {
+    //   nombre,
+    //   propietario,
+    //   email,
+    //   fecha,
+    //   sintomas,
+    //   id: generarId()
+    // }
     const objetoPaciente = {
       nombre,
       propietario,
       email,
       fecha,
-      sintomas,
-      id: generarId()
+      sintomas
     }
 
-    // console.log(objetoPaciente);
-    setPacientes([...pacientes, objetoPaciente]);
+    if (paciente.id) {
+      // Editanto el Registro
+      objetoPaciente.id = paciente.id;
+      const pacientesActualizados = pacientes.map(pacienteState => pacienteState.id === paciente.id ? objetoPaciente : pacienteState);
+      setPacientes(pacientesActualizados);
+      setPaciente({});
+
+    } else {
+      // Nuevo Registro
+      objetoPaciente.id = generarId();
+      // console.log(objetoPaciente);
+      setPacientes([...pacientes, objetoPaciente]);
+    }
 
     // Reiniciar el form
     setNombre(''), setPropietario(''), setEmail(''), setFecha(''), setSintomas('')
@@ -78,7 +102,9 @@ const Formulario = ({ pacientes, setPacientes }) => {
           <textarea id="sintomas" placeholder="Describe los Síntomas" className="border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md" value={sintomas} onChange={(e) => setSintomas(e.target.value)} />
         </div>
 
-        <button type="sumbit" className="bg-rose-600 w-full p-3 text-white text-center uppercase font-bold cursor-pointer hover:bg-rose-700 transition-colors">Agregar Paciente</button>
+        <button type="sumbit" className="bg-rose-600 w-full p-3 text-white text-center uppercase font-bold cursor-pointer hover:bg-rose-700 transition-colors">
+          {paciente.id ? 'Editar paciente' : 'Agregar paciente'}
+        </button>
       </form>
     </div>
   )
