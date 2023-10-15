@@ -66,6 +66,7 @@ const Formulario = ({ pacientes, setPacientes, paciente, setPaciente }) => {
       objetoPaciente.id = generarId();
       // console.log(objetoPaciente);
       setPacientes([...pacientes, objetoPaciente]);
+      console.log("strict");
     }
 
     // Reiniciar el form
